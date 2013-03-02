@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import dk.zpon.tcpservant.IRequestHandler;
+import dk.zpon.tcpservant.UnhandledRequest;
 
 public class ReflectorRequestHandler implements IRequestHandler {
 
@@ -18,13 +19,13 @@ public class ReflectorRequestHandler implements IRequestHandler {
 		this.serviceHandlerMethods = handle.getClass().getMethods();
 	}
 
-	public String handleRequest(String request) {
+	public String handleRequest(String request) throws UnhandledRequest {
 		IRequestObject deserializeRequest = serializer
 				.deserializeRequest(request);
 
 		IResponseObject result = null;
 		boolean foundHandlerMethod = false;
-		String methodName = deserializeRequest.getRequestHandlerMethodName();
+		String methodName = deserializeRequest.getRequestServiceMethodName();
 
 		for (Method method : serviceHandlerMethods) {
 			if (method.getName().equals(methodName)

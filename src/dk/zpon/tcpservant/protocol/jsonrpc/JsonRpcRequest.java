@@ -10,7 +10,7 @@ public class JsonRpcRequest implements IRequestObject {
 	int id;
 
 	@Override
-	public String getRequestHandlerMethodName() {
+	public String getRequestServiceMethodName() {
 		return method;
 	}
 	

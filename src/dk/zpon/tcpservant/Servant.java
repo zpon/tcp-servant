@@ -1,12 +1,10 @@
 package dk.zpon.tcpservant;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 
 public class Servant {
 
-	private int port = 8123;
-	private ServerSocket serverSocket;
+	private int port;
 	private IRequestHandlerFactory requestFactory;
 	private ISocketHandler socketHandler;
 	private boolean stop;
@@ -30,19 +28,38 @@ public class Servant {
 						requestFactory.getRequestHandlers(socket
 								.getInetAddress()));
 
-				// TODO this should be threaded
-				connection.start();
+				// Start connection
+				startConnectionInThread(connection);
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 
+	/**
+	 * This method starts the connection in a thread, to avoid it blocking
+	 * 
+	 * @param connection
+	 */
+	private void startConnectionInThread(final Connection connection) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				connection.start();
+			}
+		}).start();
+	}
+
 	private synchronized boolean shouldStop() {
 		return stop;
 	}
-	
+
 	public synchronized void stop() {
+		if (socketHandler != null) {
+			socketHandler.close();
+		}
 		this.stop = true;
 	}
 

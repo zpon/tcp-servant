@@ -6,7 +6,6 @@ import dk.zpon.tcpservant.Servant;
 
 public class EchoServer {
 	public static void main(String[] args) {
-		System.out.println("Hello, world!");
 
 		Servant servant = null;
 		try {

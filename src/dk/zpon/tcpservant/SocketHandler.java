@@ -2,7 +2,6 @@ package dk.zpon.tcpservant;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 public class SocketHandler implements ISocketHandler {
 	
@@ -17,6 +16,18 @@ public class SocketHandler implements ISocketHandler {
 	@Override
 	public ISocketWrapper waitForConnection() throws IOException {
 		return new SocketWrapper(serverSocket.accept());
+	}
+
+	@Override
+	public void close() {
+		if(serverSocket != null) {
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
