@@ -1,9 +1,8 @@
 package dk.zpon.tcpcommunicator.unittest;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
+import dk.zpon.tcpservant.UnhandledRequest;
 import dk.zpon.tcpservant.protocol.jsonrpc.CalculatorService;
 import dk.zpon.tcpservant.protocol.jsonrpc.JsonRpcSerializer;
 import dk.zpon.tcpservant.requesthandlers.reflector.ReflectorRequestHandler;
@@ -18,8 +17,13 @@ public class JsonRpcTest {
 		JsonRpcSerializer jsonRpcSerializer = new JsonRpcSerializer();
 		
 		ReflectorRequestHandler serviceReflector = new ReflectorRequestHandler(jsonRpcSerializer, jsonRpcHandler);
-		String response = serviceReflector.handleRequest(jsonRequest);
-		
-		System.out.println(response);
+		String response;
+		try {
+			response = serviceReflector.handleRequest(jsonRequest);
+			System.out.println(response);
+		} catch (UnhandledRequest e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

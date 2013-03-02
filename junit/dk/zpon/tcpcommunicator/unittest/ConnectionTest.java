@@ -1,15 +1,7 @@
 package dk.zpon.tcpcommunicator.unittest;
 
-import static org.junit.Assert.fail;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.nio.CharBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -105,7 +97,7 @@ public class ConnectionTest {
 				return new IRequestObject() {
 
 					@Override
-					public String getRequestHandlerMethodName() {
+					public String getRequestServiceMethodName() {
 						return request;
 					}
 				};
