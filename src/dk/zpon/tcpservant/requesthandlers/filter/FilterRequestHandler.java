@@ -1,6 +1,7 @@
 package dk.zpon.tcpservant.requesthandlers.filter;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import dk.zpon.tcpservant.IRequestHandler;
 import dk.zpon.tcpservant.UnhandledRequest;
@@ -11,6 +12,15 @@ public class FilterRequestHandler implements IRequestHandler {
 
 	public FilterRequestHandler(List<IRequestFilter> filters) {
 		this.filters = filters;
+	}
+
+	/**
+	 * This constructor has no filters as input, thus you need to call
+	 * {@link #addRequestFilter(IRequestFilter)} and add a filter before it is
+	 * used.
+	 */
+	public FilterRequestHandler() {
+		filters = new CopyOnWriteArrayList<IRequestFilter>();
 	}
 
 	@Override
@@ -28,4 +38,11 @@ public class FilterRequestHandler implements IRequestHandler {
 		throw new UnhandledRequest();
 	}
 
+	/**
+	 * Add a request filter to the list of filters
+	 * @param filter
+	 */
+	public synchronized void addRequestFilter(IRequestFilter filter) {
+		filters.add(filter);
+	}
 }

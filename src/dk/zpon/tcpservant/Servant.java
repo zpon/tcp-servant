@@ -9,28 +9,41 @@ public class Servant {
 	private ServerSocket serverSocket;
 	private IRequestHandlerFactory requestFactory;
 	private ISocketHandler socketHandler;
+	private boolean stop;
 
-	public Servant(IRequestHandlerFactory requestFactory, int port) throws IOException {
+	public Servant(IRequestHandlerFactory requestFactory, int port)
+			throws IOException {
 		this.requestFactory = requestFactory;
 		this.port = port;
 		socketHandler = new SocketHandler(this.port);
 	}
 
 	public void start() {
-		try {
+		while (!shouldStop()) {
+			try {
 
-			// Wait for clients
-			ISocketWrapper socket = socketHandler.waitForConnection();
+				// Wait for clients
+				ISocketWrapper socket = socketHandler.waitForConnection();
 
-			// Create connection object for socket
-			Connection connection = new Connection(socket,
-					requestFactory.getRequestHandlers(socket.getInetAddress()));
+				// Create connection object for socket
+				Connection connection = new Connection(socket,
+						requestFactory.getRequestHandlers(socket
+								.getInetAddress()));
 
-			// TODO this should be threaded
-			connection.start();
-		} catch (IOException e) {
-			e.printStackTrace();
+				// TODO this should be threaded
+				connection.start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+	}
+
+	private synchronized boolean shouldStop() {
+		return stop;
+	}
+	
+	public synchronized void stop() {
+		this.stop = true;
 	}
 
 	public void setSocketHandler(ISocketHandler newSocketHandler) {
