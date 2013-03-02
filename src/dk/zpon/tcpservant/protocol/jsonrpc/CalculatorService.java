@@ -12,8 +12,8 @@ public class CalculatorService implements IReflectorService {
 		Object params = request.getParams();
 		
 		if(params instanceof ArrayList<?>) {
-			double a = (double) ((ArrayList) params).get(0);
-			double b = (double) ((ArrayList) params).get(1);
+			Double a = (Double) ((ArrayList) params).get(0);
+			Double b = (Double) ((ArrayList) params).get(1);
 			
 			return new JsonRpcResponse(request.getJsonrpc(), a-b, request.getId()+1);
 		}

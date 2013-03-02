@@ -9,14 +9,14 @@ import dk.zpon.tcpservant.UnhandledRequest;
 public class ReflectorRequestHandler implements IRequestHandler {
 
 	private IReflectorSerializer serializer;
-	private IReflectorService handle;
+	private IReflectorService service;
 	private Method[] serviceHandlerMethods;
 
 	public ReflectorRequestHandler(IReflectorSerializer seriealizer,
-			IReflectorService handler) {
+			IReflectorService service) {
 		this.serializer = seriealizer;
-		this.handle = handler;
-		this.serviceHandlerMethods = handle.getClass().getMethods();
+		this.service = service;
+		this.serviceHandlerMethods = service.getClass().getMethods();
 	}
 
 	public String handleRequest(String request) throws UnhandledRequest {
@@ -33,7 +33,7 @@ public class ReflectorRequestHandler implements IRequestHandler {
 							.getReturnType())) {
 				try {
 					foundHandlerMethod = true;
-					result = (IResponseObject) method.invoke(handle,
+					result = (IResponseObject) method.invoke(service,
 							deserializeRequest);
 					break;
 				} catch (IllegalArgumentException e) {
@@ -48,7 +48,7 @@ public class ReflectorRequestHandler implements IRequestHandler {
 
 		// If method not found, call failover method
 		if (!foundHandlerMethod) {
-			result = handle.unknownRequest(deserializeRequest);
+			result = service.unknownRequest(deserializeRequest);
 		}
 
 		return serializer.serializeResponse(result);
